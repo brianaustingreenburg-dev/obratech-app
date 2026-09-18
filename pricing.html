@@ -115,9 +115,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- WHY SECTION -->
 <div class="section">
-  <div class="section-label">Why LA Studios / RoofTech</div>
-  <div class="section-title">Built different. Priced different.</div>
-  <div class="section-sub">Here's why 100s of contractors are switching to RoofTech.</div>
+  <div class="section-label why">Why LA Studios / RoofTech</div>
+  <div class="section-title why">Built different. Priced different.</div>
+  <div class="section-sub why">Here's why 100s of contractors are switching to RoofTech.</div>
   <div class="why-grid">
     <div class="why-card">
       <div class="why-icon">🌍</div>
@@ -163,9 +163,9 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- COMPARISON TABLE -->
 <div class="section">
-  <div class="section-label">Competitor Comparison</div>
-  <div class="section-title">See how we stack up</div>
-  <div class="section-sub">Everything competitors charge $250–$10,000/mo for. We include it all at $133/mo.</div>
+  <div class="section-label cmp">Competitor Comparison</div>
+  <div class="section-title cmp">See how we stack up</div>
+  <div class="section-sub cmp">Everything competitors charge $250–$10,000/mo for. We include it all at $133/mo.</div>
   <div class="table-wrap">
     <table>
       <thead>
@@ -195,8 +195,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- PRICING -->
 <div class="pricing-section">
-  <div class="section-label">Pricing</div>
-  <div class="section-title">One simple plan</div>
+  <div class="section-label price">Pricing</div>
+  <div class="section-title price">One simple plan</div>
   <div class="price-tag">$<span>133</span>/mo</div>
   <div class="price-sub">Unlimited users · All features · Cancel anytime</div>
   <div class="founding">🔥 First 30 customers — $103/mo founding rate</div>
@@ -228,14 +228,107 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 
 <script>
-function toggleLang(){
-  var btn = document.querySelector('.lang-pill');
-  if(btn.textContent === 'ES'){
-    btn.textContent = 'EN';
-    // Could add Spanish translation here
-  } else {
-    btn.textContent = 'ES';
+var LANG = 'en';
+
+var TX = {
+  en: {
+    badge:'⚡ Next Generation Field Technology',
+    h1:'The only roofing app <span>built from the roof up</span>',
+    heroP:'World\'s first systems architecture blueprint search. Built by a founder. Priced for the crew. Works everywhere — with or without signal.',
+    pill1:'Unlimited users', pill2:'No contracts', pill3:'Cancel anytime',
+    whyLabel:'Why LA Studios / RoofTech',
+    whyTitle:'Built different. Priced different.',
+    whySub:'Here\'s why 100s of contractors are switching to RoofTech.',
+    w1t:'World\'s First Blueprint Search', w1p:'Type the address. The building blueprint pulls automatically from public records. Measurement applied instantly. No other app does this.',
+    w2t:'100% Offline — Everything', w2p:'Safety, measurements, materials, payroll, expenses — all work without internet. Blueprint caches after first load. Go on any roof anywhere.',
+    w3t:'$133 vs $500/mo', w3p:'ServiceTitan charges $500+/mo. JobNimbus $300+. We charge $133/mo with unlimited users. You\'re not paying for their San Francisco office.',
+    w4t:'Built by a Fisherman, Not a Committee', w4p:'As an ex-fisherman in the cold waters of the Bering Sea, I learned how to work hard and stay alive. I built this for you. — Lalo Austin',
+    w5t:'Built for US & International', w5p:'Full English and Spanish. US shingles and Mexico materials. One app. Every market.',
+    w6t:'Unlimited Users — Always', w6p:'Add your whole crew, your office, your subs. No per-seat fees. Ever. 1 user or 100 — same $133/mo.',
+    quote:'"You\'re not paying for a San Francisco office, 100 employees, and a VP of Sales. You\'re paying for the app your crew actually uses on the roof. That\'s why it\'s $133 a month."',
+    quoteAttr:'— Lalo Austin, Founder · LA Studios · Acapulco, Mexico',
+    cmpLabel:'Competitor Comparison', cmpTitle:'See how we stack up', cmpSub:'Everything competitors charge $250–$10,000/mo for. We include it all at $133/mo.',
+    th1:'Feature', th2:'Competitors', th3:'RoofTech ✓',
+    pricingLabel:'Pricing', pricingTitle:'One simple plan',
+    priceSub:'Unlimited users · All features · Cancel anytime',
+    founding:'🔥 First 30 customers — $103/mo founding rate',
+    repH:'Setup cost?', repP:'Your sales rep will go over all setup details with you personally. No surprises.',
+    ctaLabel:'Ready to start', ctaTitle:'Get your crew on RoofTech today',
+    ctaSub:'No contracts. No setup headaches. Your crew will be running their first job in minutes.',
+    ctaBtn:'Get Started — $133/mo →', ctaNote:'Setup fee discussed with your rep',
+    back:'← Back to app',
+    footerQ:'Questions? Talk to us directly.',
+  },
+  es: {
+    badge:'⚡ Tecnología de Campo de Nueva Generación',
+    h1:'La única app de techado <span>construida desde el techo</span>',
+    heroP:'Primera búsqueda de planos arquitectónicos del mundo. Creada por un fundador. Precio para la cuadrilla. Funciona en todas partes — con o sin señal.',
+    pill1:'Usuarios ilimitados', pill2:'Sin contratos', pill3:'Cancela cuando quieras',
+    whyLabel:'Por qué LA Studios / RoofTech',
+    whyTitle:'Diferente en diseño. Diferente en precio.',
+    whySub:'Por qué cientos de contratistas están cambiando a RoofTech.',
+    w1t:'Primera Búsqueda de Planos del Mundo', w1p:'Escribe la dirección. El plano del edificio se carga automáticamente desde registros públicos. Medición aplicada al instante. Ninguna otra app hace esto.',
+    w2t:'100% Sin Internet — Todo', w2p:'Seguridad, medidas, materiales, nómina, gastos — todo funciona sin internet. El plano se guarda tras la primera carga. Ve a cualquier techo.',
+    w3t:'$133 vs $500/mes', w3p:'ServiceTitan cobra $500+/mes. JobNimbus $300+. Nosotros cobramos $133/mes con usuarios ilimitados. No estás pagando su oficina en San Francisco.',
+    w4t:'Creado por un Pescador, No un Comité', w4p:'Como ex-pescador en las frías aguas del Mar de Bering, aprendí a trabajar duro y mantenerme con vida. Construí esto para ti. — Lalo Austin',
+    w5t:'Para EE.UU. e Internacional', w5p:'Inglés y español completo. Materiales de EE.UU. y México. Una app. Todos los mercados.',
+    w6t:'Usuarios Ilimitados — Siempre', w6p:'Agrega a toda tu cuadrilla, tu oficina, tus subcontratistas. Sin cargos por usuario. Nunca. 1 o 100 usuarios — mismo precio $133/mes.',
+    quote:'"No estás pagando por una oficina en San Francisco, cien empleados y un director de ventas. Estás pagando por la app que tu cuadrilla realmente usa en el techo. Por eso cuesta $133 al mes."',
+    quoteAttr:'— Lalo Austin, Fundador · LA Studios · Acapulco, México',
+    cmpLabel:'Comparación con Competidores', cmpTitle:'Cómo nos comparamos', cmpSub:'Todo lo que los competidores cobran $250–$10,000/mes. Nosotros lo incluimos todo a $133/mes.',
+    th1:'Función', th2:'Competidores', th3:'RoofTech ✓',
+    pricingLabel:'Precios', pricingTitle:'Un plan simple',
+    priceSub:'Usuarios ilimitados · Todas las funciones · Cancela cuando quieras',
+    founding:'🔥 Primeros 30 clientes — $103/mes precio fundador',
+    repH:'¿Costo de configuración?', repP:'Tu representante de ventas revisará todos los detalles de configuración contigo personalmente. Sin sorpresas.',
+    ctaLabel:'Listo para empezar', ctaTitle:'Pon a tu cuadrilla en RoofTech hoy',
+    ctaSub:'Sin contratos. Sin dolores de cabeza. Tu cuadrilla estará corriendo su primer trabajo en minutos.',
+    ctaBtn:'Comenzar — $133/mes →', ctaNote:'Costo de configuración discutido con tu representante',
+    back:'← Volver a la app',
+    footerQ:'¿Preguntas? Habla con nosotros directamente.',
   }
+};
+
+function toggleLang(){
+  LANG = LANG === 'en' ? 'es' : 'en';
+  document.querySelector('.lang-pill').textContent = LANG === 'en' ? 'ES' : 'EN';
+  applyLang();
+}
+
+function applyLang(){
+  var t = TX[LANG];
+  document.querySelector('.hero-badge').textContent = t.badge;
+  document.querySelector('.hero h1').innerHTML = t.h1;
+  document.querySelector('.hero p').textContent = t.heroP;
+  var pills = document.querySelectorAll('.pill');
+  pills[0].textContent = t.pill1; pills[1].textContent = t.pill2; pills[2].textContent = t.pill3;
+  document.querySelector('.section-label.why').textContent = t.whyLabel;
+  document.querySelector('.section-title.why').textContent = t.whyTitle;
+  document.querySelector('.section-sub.why').textContent = t.whySub;
+  var cards = document.querySelectorAll('.why-card');
+  var wt = [t.w1t,t.w2t,t.w3t,t.w4t,t.w5t,t.w6t];
+  var wp = [t.w1p,t.w2p,t.w3p,t.w4p,t.w5p,t.w6p];
+  cards.forEach(function(c,i){ c.querySelector('h3').textContent=wt[i]; c.querySelector('p').textContent=wp[i]; });
+  document.querySelector('.quote-text').textContent = t.quote;
+  document.querySelector('.quote-attr').textContent = t.quoteAttr;
+  document.querySelector('.section-label.cmp').textContent = t.cmpLabel;
+  document.querySelector('.section-title.cmp').textContent = t.cmpTitle;
+  document.querySelector('.section-sub.cmp').textContent = t.cmpSub;
+  var ths = document.querySelectorAll('th');
+  ths[0].textContent=t.th1; ths[1].textContent=t.th2; ths[2].textContent=t.th3;
+  document.querySelector('.section-label.price').textContent = t.pricingLabel;
+  document.querySelector('.section-title.price').textContent = t.pricingTitle;
+  document.querySelector('.price-sub').textContent = t.priceSub;
+  document.querySelector('.founding').textContent = t.founding;
+  document.querySelector('.rep-text h4').textContent = t.repH;
+  document.querySelector('.rep-text p').textContent = t.repP;
+  document.querySelector('.cta-label').textContent = t.ctaLabel;
+  document.querySelector('.cta-title').textContent = t.ctaTitle;
+  document.querySelector('.cta-sub').textContent = t.ctaSub;
+  document.querySelector('.btn-primary').textContent = t.ctaBtn;
+  document.querySelector('.btn-note').textContent = t.ctaNote;
+  document.querySelector('.back-link').textContent = t.back;
+  document.querySelector('.footer p').textContent = t.footerQ;
 }
 </script>
 
