@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>RoofTech México</title>
+<title>ObraTech — Todo en una obra</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
@@ -86,7 +86,7 @@ canvas{display:block;touch-action:none}
 <body>
 <div class="app">
   <div class="gbar">
-    <span class="gbar-t" id="GT">RoofTech</span>
+    <span class="gbar-t" id="GT">ObraTech</span>
     <div class="lt">
       <button class="lb on" id="bEs" onclick="sL('es')">ES</button>
       <button class="lb" id="bEn" onclick="sL('en')">EN</button>
@@ -216,12 +216,12 @@ const SPRODS={
 // ─── TRANSLATIONS ────────────────────────────────────────────
 const TX={
   es:{
-    nav:['Inicio','Cotizar','Obras','Medidas','Seguridad','Cuadrilla','Reseñas','Planos','Solar'],
-    screens:['RoofTech','Nueva cotización','Mis obras','Medidas','Seguridad','Cuadrilla','Reseñas','Planos','☀️ Solar'],
+    nav:['Inicio','Cotizar','Obras','Medidas','Seguridad','Solar','Oficios','Colores'],
+    screens:['ObraTech','Nueva cotización','Mis obras','Medidas','Seguridad','☀️ Solar'],
     greeting:'Buenos días, Lalo', outstanding:'Por cobrar', activeJobs:'Obras activas',
     qa:'Acciones rápidas', newQ:'Nueva cotización', newO:'Nuevo plano solar', recent:'Obras recientes',
     prog:'Avance', photos:'fotos', bActive:'En obra', bDone:'Terminada',
-    qSub:'Hoy · CDMX', cliLbl:'Cliente', addrLbl:'Alcaldía / Dirección',
+    qSub:'Hoy · CDMX', cliLbl:'Cliente', cliPh:'Nombre del cliente', addrLbl:'Alcaldía / Dirección', addrPh:'Iztapalapa, CDMX',
     qiLbl:'Partidas rápidas CDMX', concLbl:'Conceptos', totLbl:'Total obra',
     depLbl:'Anticipo', dep2:'Anticipo a cobrar', sendWA:'Enviar WhatsApp + link de pago',
     sentT:'¡Enviada!', sentM:'PDF + link SPEI enviados por WhatsApp.', newQBtn:'Nueva cotización',
@@ -298,12 +298,12 @@ const TX={
     bestBadge:'Mejor oferta',
   },
   en:{
-    nav:['Home','Quote','Jobs','Measures','Safety','Crew','Reviews','Blueprints','Solar'],
-    screens:['RoofTech','New quote','My jobs','Measures','Safety','Crew','Reviews','Blueprints','☀️ Solar'],
+    nav:['Home','Quote','Jobs','Measures','Safety','Solar','Trades','Colors'],
+    screens:['ObraTech','New quote','My jobs','Measures','Safety','☀️ Solar'],
     greeting:'Good morning, Lalo', outstanding:'Outstanding', activeJobs:'Active jobs',
     qa:'Quick actions', newQ:'New quote', newO:'New solar plan', recent:'Recent jobs',
     prog:'Progress', photos:'photos', bActive:'Active', bDone:'Completed',
-    qSub:'Today · CDMX', cliLbl:'Client', addrLbl:'District / Address',
+    qSub:'Today · CDMX', cliLbl:'Client', cliPh:'Client name', addrLbl:'District / Address', addrPh:'e.g. Iztapalapa, CDMX',
     qiLbl:'CDMX quick items', concLbl:'Line items', totLbl:'Total',
     depLbl:'Deposit', dep2:'Deposit to collect', sendWA:'Send WhatsApp + payment link',
     sentT:'Sent!', sentM:'PDF + SPEI link sent via WhatsApp.', newQBtn:'New quote',
@@ -381,8 +381,8 @@ const TX={
   }
 };
 
-const TABS=['home','quote','obras','medidas','safety','crew','reviews','blueprints','solar'];
-const TICONS=['ti-home','ti-file-invoice','ti-building-warehouse','ti-ruler-measure','ti-shield-check','ti-users','ti-star','ti-blueprint','ti-sun'];
+const TABS=['home','quote','obras','medidas','safety','solar','trades','colors'];
+const TICONS=['ti-home','ti-file-invoice','ti-building-warehouse','ti-ruler-measure','ti-shield-check','ti-sun'];
 const fmt=n=>'$'+Math.round(n).toLocaleString('es-MX');
 const fN=n=>Math.round(n).toLocaleString('es-MX');
 const CREW_SEED=[
@@ -395,14 +395,143 @@ if(!crewList) crewList=[...CREW_SEED];
 
 function sL(l){L=l;document.getElementById('bEs').classList.toggle('on',l==='es');document.getElementById('bEn').classList.toggle('on',l==='en');render();}
 function goTab(t){TAB=t;if(t==='solar')solView='home';render();}
-function render(){
+function rTrades(){
+  const t=TX[L];const es=L==='es';
+  const TRADES=[
+    {id:'roofing',icon:'🏠',name:es?'Techado':'Roofing',tools:[es?'Pistola de clavos':'Nail gun',es?'Martillo de techar':'Roofing hammer',es?'Cúter':'Utility knife',es?'Cinta métrica':'Tape measure'],materials:[es?'Tejas asfalto':'Asphalt shingles',es?'Papel fieltro':'Felt paper',es?'Clavos':'Roofing nails',es?'Sellador':'Roofing cement'],safety:[es?'Arnés de caída':'Fall harness',es?'Casco':'Hard hat',es?'Botas':'Safety boots']},
+    {id:'painting',icon:'🎨',name:es?'Pintura':'Painting',tools:[es?'Rodillo':'Roller',es?'Brocha':'Brush',es?'Pistola de pintura':'Paint sprayer',es?'Cinta adhesiva':'Masking tape'],materials:[es?'Pintura interior':'Interior paint',es?'Pintura exterior':'Exterior paint',es?'Sellador':'Primer',es?'Diluyente':'Thinner'],safety:[es?'Mascarilla':'Respirator',es?'Gafas':'Safety glasses',es?'Guantes':'Gloves']},
+    {id:'electrical',icon:'⚡',name:es?'Eléctrico':'Electrical',tools:[es?'Multímetro':'Multimeter',es?'Pelacables':'Wire stripper',es?'Destornillador':'Screwdriver',es?'Probador de voltaje':'Voltage tester'],materials:[es?'Cable 12 AWG':'12 AWG wire',es?'Breakers':'Circuit breakers',es?'Conduit':'Conduit',es?'Cajas eléctricas':'Electrical boxes'],safety:[es?'Guantes dieléctricos':'Dielectric gloves',es?'Bloqueo/etiquetado':'Lockout/tagout',es?'Sin joyería':'No jewelry']},
+    {id:'plumbing',icon:'🔧',name:es?'Plomería':'Plumbing',tools:[es?'Llave inglesa':'Pipe wrench',es?'Soldador':'Torch',es?'Cortador de tubo':'Pipe cutter',es?'Cinta de teflón':'Teflon tape'],materials:[es?'Tubo PVC':'PVC pipe',es?'Cobre':'Copper pipe',es?'Conectores':'Fittings',es?'Soldadura':'Solder'],safety:[es?'Extintor':'Fire extinguisher',es?'Gafas':'Safety glasses',es?'Guantes':'Gloves']},
+    {id:'concrete',icon:'🪨',name:es?'Concreto':'Concrete',tools:[es?'Vibrador':'Concrete vibrator',es?'Llana':'Trowel',es?'Regla':'Screed',es?'Mezcladora':'Mixer'],materials:[es?'Cemento':'Cement',es?'Arena':'Sand',es?'Grava':'Gravel',es?'Varilla':'Rebar'],safety:[es?'Botas impermeables':'Waterproof boots',es?'Guantes':'Gloves',es?'Gafas':'Safety glasses']},
+    {id:'framing',icon:'🪚',name:es?'Carpintería':'Framing',tools:[es?'Sierra circular':'Circular saw',es?'Pistola de clavos':'Nail gun',es?'Nivel':'Level',es?'Escuadra':'Speed square'],materials:[es?'Madera 2x4':'2x4 lumber',es?'Madera 2x6':'2x6 lumber',es?'Clavos':'Nails',es?'Vigas':'Beams'],safety:[es?'Protección auditiva':'Ear protection',es?'Gafas':'Safety glasses',es?'Casco':'Hard hat']},
+    {id:'hvac',icon:'❄️',name:'HVAC',tools:[es?'Manifold':'Manifold gauge',es?'Detector de fugas':'Leak detector',es?'Taladro':'Drill',es?'Llave de tuercas':'Wrench'],materials:[es?'Refrigerante':'Refrigerant',es?'Ductos':'Ductwork',es?'Filtros':'Filters',es?'Termostato':'Thermostat'],safety:[es?'Mascarilla':'Respirator',es?'Guantes':'Gloves',es?'Sin llama abierta con refrigerante':'No open flame near refrigerant']},
+    {id:'landscaping',icon:'🌿',name:es?'Jardinería':'Landscaping',tools:[es?'Cortadora':'Lawn mower',es?'Bordeadora':'Edger',es?'Soplador':'Blower',es?'Pala':'Shovel'],materials:[es?'Tierra':'Soil',es?'Plantas':'Plants',es?'Fertilizante':'Fertilizer',es?'Mulch':'Mulch'],safety:[es?'Protección auditiva':'Ear protection',es?'Gafas':'Safety glasses',es?'Guantes':'Gloves']},
+  ];
+  const sel=window._tradeSel||null;
+  if(!sel){
+    return `<div style="padding-bottom:80px">
+      <div style="background:#1A1A2E;padding:14px 18px"><p style="color:#E8E0D5;font-size:12px;margin:0">${es?'Selecciona un oficio':'Select a trade'}</p></div>
+      <div style="padding:14px 18px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${TRADES.map(tr=>`<button onclick="window._tradeSel='${tr.id}';render()" style="background:#fff;border:1px solid #E8E0D5;border-radius:14px;padding:16px 10px;cursor:pointer;text-align:center;font-family:inherit">
+          <div style="font-size:28px;margin-bottom:8px">${tr.icon}</div>
+          <p style="font-size:13px;font-weight:700;color:#1A1A2E;margin:0">${tr.name}</p>
+        </button>`).join('')}
+      </div></div>`;
+  }
+  const tr=TRADES.find(x=>x.id===sel);
+  return `<div style="padding-bottom:80px">
+    <div style="background:#1A1A2E;padding:12px 18px;display:flex;align-items:center;gap:12px">
+      <button onclick="window._tradeSel=null;render()" style="background:none;border:none;color:#E8E0D5;cursor:pointer;font-size:16px;padding:0">←</button>
+      <p style="color:#E8E0D5;font-size:14px;font-weight:700;margin:0">${tr.icon} ${tr.name}</p>
+    </div>
+    <div style="padding:16px 18px 0">
+      <div style="background:#1A1A2E;border-radius:14px;padding:14px 16px;margin-bottom:12px">
+        <p style="color:#FF6B2B;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🔧 ${es?'Herramientas':'Tools'}</p>
+        ${tr.tools.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#E8E0D5;font-size:13px">• ${i}</span></div>`).join('')}
+      </div>
+      <div style="background:#1A1A2E;border-radius:14px;padding:14px 16px;margin-bottom:12px">
+        <p style="color:#22C55E;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">📦 ${es?'Materiales':'Materials'}</p>
+        ${tr.materials.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#E8E0D5;font-size:13px">• ${i}</span></div>`).join('')}
+      </div>
+      <div style="background:#1A1A2E;border-radius:14px;padding:14px 16px">
+        <p style="color:#EF4444;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">🛡️ ${es?'Seguridad':'Safety'}</p>
+        ${tr.safety.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)"><span style="color:#E8E0D5;font-size:13px">• ${i}</span></div>`).join('')}
+      </div>
+    </div></div>`;
+}
+
+function rColors(){
+  const es=L==='es';
+  const PALETTES=[
+    {name:'Classic White',colors:['#FFFFFF','#F5F5F0','#E8E4DC','#D4CFC6']},
+    {name:'Warm Gray',colors:['#9E9E9E','#757575','#616161','#424242']},
+    {name:'Navy Blue',colors:['#1565C0','#1976D2','#1E88E5','#42A5F5']},
+    {name:'Forest Green',colors:['#2E7D32','#388E3C','#43A047','#66BB6A']},
+    {name:'Desert Sand',colors:['#D4A574','#C19A6B','#A67C52','#8B6535']},
+    {name:'Charcoal',colors:['#37474F','#455A64','#546E7A','#607D8B']},
+    {name:'Terracotta',colors:['#BF5722','#D84315','#E64A19','#F4511E']},
+    {name:'Sage',colors:['#7CB342','#8BC34A','#9CCC65','#AED581']},
+  ];
+  const sel=window._colorSel||null;
+  const wall=window._colorWall||PALETTES[0].colors[0];
+  const trim=window._colorTrim||'#FFFFFF';
+  const door=window._colorDoor||'#8B6535';
+  return `<div style="padding-bottom:80px">
+    <div style="background:#1A1A2E;padding:14px 18px">
+      <p style="color:#E8E0D5;font-size:12px;margin:0">${es?'Consultor de color 3D':'3D Color Consultant'}</p>
+    </div>
+    <div style="padding:16px 18px 0">
+
+      <!-- 3D House Visual -->
+      <div style="background:#87CEEB;border-radius:16px;overflow:hidden;margin-bottom:16px;position:relative">
+        <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <!-- Sky -->
+          <rect width="320" height="220" fill="#87CEEB"/>
+          <!-- Ground -->
+          <rect y="170" width="320" height="50" fill="#7CB342"/>
+          <!-- House body -->
+          <rect x="60" y="100" width="200" height="90" fill="${wall}" stroke="#00000020" stroke-width="1"/>
+          <!-- Roof -->
+          <polygon points="40,100 160,30 280,100" fill="#8B6535" stroke="#00000030" stroke-width="1"/>
+          <!-- Roof trim -->
+          <polygon points="40,100 160,30 280,100" fill="none" stroke="${trim}" stroke-width="3"/>
+          <!-- Door -->
+          <rect x="135" y="140" width="50" height="50" rx="4" fill="${door}"/>
+          <circle cx="178" cy="166" r="3" fill="#FFD700"/>
+          <!-- Windows -->
+          <rect x="75" y="115" width="45" height="35" rx="3" fill="#B3E5FC" stroke="${trim}" stroke-width="2"/>
+          <line x1="97.5" y1="115" x2="97.5" y2="150" stroke="${trim}" stroke-width="1"/>
+          <line x1="75" y1="132.5" x2="120" y2="132.5" stroke="${trim}" stroke-width="1"/>
+          <rect x="200" y="115" width="45" height="35" rx="3" fill="#B3E5FC" stroke="${trim}" stroke-width="2"/>
+          <line x1="222.5" y1="115" x2="222.5" y2="150" stroke="${trim}" stroke-width="1"/>
+          <line x1="200" y1="132.5" x2="245" y2="132.5" stroke="${trim}" stroke-width="1"/>
+          <!-- Chimney -->
+          <rect x="210" y="40" width="25" height="40" fill="#8B6535"/>
+          <!-- Sun -->
+          <circle cx="280" cy="40" r="20" fill="#FFD700" opacity="0.8"/>
+        </svg>
+      </div>
+
+      <!-- Color Pickers -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div>
+          <p style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${es?'Paredes':'Walls'}</p>
+          <input type="color" value="${wall}" onchange="window._colorWall=this.value;render()" style="width:100%;height:44px;border:none;border-radius:10px;cursor:pointer;padding:2px">
+        </div>
+        <div>
+          <p style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${es?'Molduras':'Trim'}</p>
+          <input type="color" value="${trim}" onchange="window._colorTrim=this.value;render()" style="width:100%;height:44px;border:none;border-radius:10px;cursor:pointer;padding:2px">
+        </div>
+        <div>
+          <p style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${es?'Puerta':'Door'}</p>
+          <input type="color" value="${door}" onchange="window._colorDoor=this.value;render()" style="width:100%;height:44px;border:none;border-radius:10px;cursor:pointer;padding:2px">
+        </div>
+      </div>
+
+      <!-- Preset Palettes -->
+      <p style="font-size:12px;font-weight:700;color:#2D2D2D;margin-bottom:10px">${es?'Paletas sugeridas':'Suggested palettes'}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        ${PALETTES.map(p=>`
+          <button onclick="window._colorWall='${p.colors[0]}';window._colorTrim='${p.colors[3]}';window._colorDoor='${p.colors[2]}';render()" style="background:#fff;border:1px solid #E8E0D5;border-radius:12px;padding:10px;cursor:pointer;text-align:left">
+            <div style="display:flex;gap:4px;margin-bottom:6px">
+              ${p.colors.map(c=>`<div style="width:20px;height:20px;border-radius:4px;background:${c};border:1px solid rgba(0,0,0,.1)"></div>`).join('')}
+            </div>
+            <p style="font-size:11px;font-weight:600;color:#1A1A2E;margin:0">${p.name}</p>
+          </button>`).join('')}
+      </div>
+
+      <!-- Share -->
+      <button onclick="alert('${es?'Esquema de color guardado':'Color scheme saved!'}')" style="width:100%;background:#FF6B2B;color:#fff;border:none;border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;font-family:inherit">
+        ${es?'💾 Guardar esquema':'💾 Save color scheme'}
+      </button>
+    </div></div>`;
+}
   const ti=TABS.indexOf(TAB);
   const t=TX[L];
-  const titleText=TAB==='solar'?t.screens[8]:(t.screens[ti]||'RoofTech');
-  document.getElementById('GT').innerHTML=TAB==='solar'?`<i class="ti ti-sun" style="color:#F59E0B;font-size:16px"></i> ${t.screens[8]}`:titleText;
+  const titleText=t.screens[ti]||'ObraTech';
+  document.getElementById('GT').innerHTML=TAB==='solar'?`<i class="ti ti-sun" style="color:#F59E0B;font-size:16px"></i> ${t.screens[5]}`:titleText;
   document.getElementById('NAV').innerHTML=rNav();
   document.getElementById('BODY').innerHTML=rScreen();
-  if(TAB==='blueprints'&&bpView==='canvas') initBpCanvas();
   if(TAB==='solar'&&solView==='measure') initSolCanvas();
   document.getElementById('BODY').scrollTop=0;
 }
@@ -425,10 +554,9 @@ function rScreen(){
   if(TAB==='obras')return rObras();
   if(TAB==='medidas')return rMedidas();
   if(TAB==='safety')return rSafety();
-  if(TAB==='crew')return rCrew();
-  if(TAB==='reviews')return rReviews();
-  if(TAB==='blueprints')return rBlueprint();
   if(TAB==='solar')return rSolar();
+  if(TAB==='trades')return rTrades();
+  if(TAB==='colors')return rColors();
   return '';
 }
 
@@ -458,7 +586,7 @@ function rHome(){
         <i class="ti ti-file-invoice" style="font-size:20px"></i>${t.newQ}
       </button>
       <button onclick="goTab('solar')" style="background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;border:none;border-radius:11px;padding:12px 6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;font-family:inherit">
-        <i class="ti ti-sun" style="font-size:20px"></i>${t.nav[8]}
+        <i class="ti ti-sun" style="font-size:20px"></i>${t.nav[5]}
       </button>
     </div>
     <p style="font-size:11px;font-weight:700;color:#2D2D2D;margin-bottom:9px">${t.recent}</p>
@@ -488,11 +616,11 @@ function rQuote(){
   <div class="shdr"><p style="color:#E8E0D5;font-size:12px">${t.qSub}</p></div>
   <div style="padding:12px 14px 100px">
     <label style="font-size:11px;font-weight:700;color:#2D2D2D;display:block;margin-bottom:4px">${t.cliLbl}</label>
-    <input class="input" value="${qClient}" oninput="qClient=this.value" placeholder="${L==='es'?'Nombre del cliente':'Client name'}" style="margin-bottom:11px">
+    <input class="input" value="${qClient}" oninput="qClient=this.value" placeholder="${t.cliPh}" style="margin-bottom:11px">
     <label style="font-size:11px;font-weight:700;color:#2D2D2D;display:block;margin-bottom:4px">${t.addrLbl}</label>
-    <input class="input" value="${qAddr}" oninput="qAddr=this.value" placeholder="${L==='es'?'Iztapalapa, CDMX':'e.g. Iztapalapa, CDMX'}" style="margin-bottom:11px">
+    <input class="input" value="${qAddr}" oninput="qAddr=this.value" placeholder="${t.addrPh}" style="margin-bottom:11px">
     <p style="font-size:11px;font-weight:700;color:#2D2D2D;margin-bottom:7px">${t.qiLbl}</p>
-    <div class="tags">${[['Obra negra m²',4800],['Aplanado m²',280],['Azulejo m²',320],['Plomería',3500],['Eléctrico',4200],['Losa m²',1200],['Pintura m²',95],['Tabique m²',340]].map(([n,p])=>`<button class="tag ${qTags.find(i=>i.n===n)?'on':''}" onclick="toggleTag('${n}',${p})">${n}</button>`).join('')}</div>
+    <div class="tags">${(L==='es'?[['Obra negra m²',4800],['Aplanado m²',280],['Azulejo m²',320],['Plomería',3500],['Eléctrico',4200],['Losa m²',1200],['Pintura m²',95],['Tabique m²',340]]:[['Shell const. m²',4800],['Plaster m²',280],['Tile m²',320],['Plumbing',3500],['Electrical',4200],['Slab m²',1200],['Paint m²',95],['Block m²',340]]).map(([n,p])=>`<button class="tag ${qTags.find(i=>i.n===n)?'on':''}" onclick="toggleTag('${n}',${p})">${n}</button>`).join('')}</div>
     <p style="font-size:11px;font-weight:700;color:#2D2D2D;margin-bottom:7px">${t.concLbl}</p>
     ${qTags.map(i=>`<div style="background:#fff;border:1px solid #E8E0D5;border-radius:9px;padding:9px 11px;margin-bottom:7px;display:flex;justify-content:space-between"><span style="font-size:13px">${i.n}</span><span style="font-size:13px;font-weight:700;color:#FF6B2B">${fmt(i.p)}</span></div>`).join('')}
     <div class="totbox">
@@ -539,27 +667,6 @@ function rObras(){
 }
 
 // ─── MEDIDAS ─────────────────────────────────────────────────
-function rMedidas(){
-  const t=TX[L];
-  if(medIdx===null)return `<div class="shdr"><p style="color:#E8E0D5;font-size:12px">${t.mSub}</p></div>
-  <div style="padding:12px 14px"><div class="meas-g">${t.mTypes.map((nm,i)=>`
-    <button class="meas-b" onclick="medIdx=${i};medVals=[...MD[${i}]];medResult=null;render()">
-      <div style="font-size:24px;margin-bottom:5px">${MI[i]}</div>
-      <p style="font-size:12px;font-weight:700;color:#1A1A2E;margin:0;line-height:1.3">${nm}</p>
-    </button>`).join('')}</div></div>`;
-  const idx=medIdx, fields=t.mF[idx];
-  return `
-  <div style="background:#1A1A2E;padding:12px 16px;display:flex;align-items:center;gap:10px">
-    <button onclick="medIdx=null;medResult=null;render()" style="background:none;border:none;color:#E8E0D5;font-size:16px;cursor:pointer;padding:0">←</button>
-    <p style="color:#E8E0D5;font-size:13px;margin:0">${MI[idx]} ${t.mTypes[idx]}</p>
-  </div>
-  <div style="padding:12px 14px">
-    ${fields.map((f,i)=>`<div style="margin-bottom:11px"><label style="font-size:11px;font-weight:700;color:#2D2D2D;display:block;margin-bottom:4px">${f}</label><input type="number" step="any" value="${medVals[i]||MD[idx][i]}" class="input" onchange="medVals[${i}]=parseFloat(this.value)||0"></div>`).join('')}
-    <button class="btn-o" onclick="medResult=MC[medIdx](medVals.map((v,i)=>v||MD[medIdx][i]));render()"><i class="ti ti-calculator"></i>${t.mCalc}</button>
-    ${medResult?`<div class="res-box"><p style="color:#E8E0D5;font-size:11px;font-weight:700;margin-bottom:9px">${t.mRes}</p>${medResult.map(r=>`<div class="res-row"><span style="color:#E8E0D5;font-size:13px">${r[0]}</span><span style="color:#FF6B2B;font-weight:700;font-size:14px">${r[1]}</span></div>`).join('')}</div>
-    <button onclick="medResult=null;render()" style="width:100%;background:#F5F5F0;border:1px solid #E8E0D5;border-radius:12px;padding:12px;font-size:13px;cursor:pointer;margin-top:9px;font-family:inherit">${t.mRecalc}</button>`:''}
-  </div>`;
-}
 
 // ─── SAFETY ──────────────────────────────────────────────────
 function rSafety(){
@@ -820,8 +927,8 @@ function rSolMeasure(){
     <label style="font-size:11px;font-weight:700;color:#2D2D2D;display:block;margin-bottom:4px">${t.bpOL}</label>
     <input class="input" id="sOb" placeholder="${t.solObraPh}" value="${jobSpec.obra}" oninput="jobSpec.obra=this.value" style="margin-bottom:10px">
     <label style="font-size:11px;font-weight:700;color:#2D2D2D;display:block;margin-bottom:4px">${t.bpS1||t.solAddrPh}</label>
-    <input class="input" id="sAd" placeholder="${t.solAddrPh}" value="${jobSpec.address}" oninput="jobSpec.address=this.value" style="margin-bottom:10px">
-    <button class="btn-sun" style="margin-top:0" onclick="loadSolBp()"><i class="ti ti-blueprint"></i>${t.solLoadBtn}</button>
+    <input class="input" id="sAd" placeholder="${t.solAddrPh}" value="${jobSpec.address}" oninput="jobSpec.address=this.value;clearTimeout(window._solt);window._solt=setTimeout(loadSolBp,700)" onkeydown="if(event.keyCode===13)loadSolBp()" style="margin-bottom:10px">
+    ${jobSpec.address?'':`<p style="font-size:12px;color:#888;text-align:center;padding:6px 0">${L==='es'?'Escribe una dirección para comenzar':'Type an address to begin'}</p>`}
   </div>
   <div id="solCanvasArea" style="display:${jobSpec.address?'block':'none'}">
     <div class="bp-canvas-wrap">
@@ -830,6 +937,7 @@ function rSolMeasure(){
       <div style="position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:5px">
         <button onclick="roofShowGrid=!roofShowGrid;drawSol()" style="width:32px;height:32px;background:rgba(255,255,255,.15);border:none;border-radius:7px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center"><i class="ti ti-grid-dots" style="font-size:15px"></i></button>
         <button onclick="roofPts=roofPts.slice(0,-1);drawSol()" style="width:32px;height:32px;background:rgba(255,255,255,.15);border:none;border-radius:7px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center"><i class="ti ti-arrow-back-up" style="font-size:15px"></i></button>
+        <button onclick="roofPts=[];roofHover=null;drawSol()" style="width:32px;height:32px;background:rgba(239,68,68,.6);border:none;border-radius:7px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center" title="Cancel / Cancelar"><i class="ti ti-x" style="font-size:15px"></i></button>
       </div>
     </div>
     <div style="background:#1A1A2E;padding:8px 12px;display:flex;align-items:center;justify-content:space-between">
@@ -854,7 +962,7 @@ function loadSolBp(){
   document.getElementById('solCanvasArea').style.display='block';
   initSolCanvas();
 }
-function initSolCanvas(){const c=document.getElementById('sC');if(!c)return;c.onclick=e=>{const r=c.getBoundingClientRect();const p=solSnap({x:(e.clientX-r.left)*(RW/r.width),y:(e.clientY-r.top)*(RH/r.height)});if(roofPts.length>=3&&dist(p,roofPts[0])<18){closeSolZone();return;}roofPts.push(p);drawSol();};c.onmousemove=e=>{const r=c.getBoundingClientRect();roofHover=solSnap({x:(e.clientX-r.left)*(RW/r.width),y:(e.clientY-r.top)*(RH/r.height)});drawSol();};c.addEventListener('touchstart',e=>{e.preventDefault();if(e.touches[0]){const r=c.getBoundingClientRect();const p=solSnap({x:(e.touches[0].clientX-r.left)*(RW/r.width),y:(e.touches[0].clientY-r.top)*(RH/r.height)});if(roofPts.length>=3&&dist(p,roofPts[0])<18){closeSolZone();return;}roofPts.push(p);drawSol();}},{passive:false});drawSol();}
+function initSolCanvas(){const c=document.getElementById('sC');if(!c)return;c.onclick=e=>{const r=c.getBoundingClientRect();const p=solSnap({x:(e.clientX-r.left)*(RW/r.width),y:(e.clientY-r.top)*(RH/r.height)});if(roofPts.length>=3&&dist(p,roofPts[0])<18){closeSolZone();return;}roofPts.push(p);drawSol();};c.oncontextmenu=e=>{e.preventDefault();roofPts=[];roofHover=null;drawSol();};c.onmousemove=e=>{const r=c.getBoundingClientRect();roofHover=solSnap({x:(e.clientX-r.left)*(RW/r.width),y:(e.clientY-r.top)*(RH/r.height)});drawSol();};c.addEventListener('touchstart',e=>{e.preventDefault();if(e.touches[0]){const r=c.getBoundingClientRect();const p=solSnap({x:(e.touches[0].clientX-r.left)*(RW/r.width),y:(e.touches[0].clientY-r.top)*(RH/r.height)});if(roofPts.length>=3&&dist(p,roofPts[0])<18){closeSolZone();return;}roofPts.push(p);drawSol();}},{passive:false});document.onkeydown=e=>{if(e.key==='Escape'){roofPts=[];roofHover=null;drawSol();}};drawSol();}
 function solSnap(p){const g=roofGrid;return{x:Math.round(p.x/g)*g,y:Math.round(p.y/g)*g};}
 function closeSolZone(){if(roofPts.length<3)return;const color=SC[roofZones.length%SC.length];const mpp=roofScale/roofGrid;roofZones.push({color,points:[...roofPts],area:pArea(roofPts)*mpp*mpp,perim:pPerim(roofPts)*mpp});roofPts=[];roofHover=null;render();}
 function goSolSpec(){const tot=roofZones.reduce((s,z)=>s+z.area,0);jobSpec.roofM2=tot;jobSpec.kWp=Math.min(10,Math.floor(tot*0.18*10)/10);goSol('spec');}
@@ -896,7 +1004,7 @@ function rSolSpec(){
     <div class="roi-box">
       <p style="color:#F59E0B;font-size:11px;font-weight:700;margin-bottom:10px">📍 ${jobSpec.address||'Iztapalapa, CDMX'}</p>
       <div class="roi-grid">
-        <div class="roi-item"><p style="color:#E8E0D5;font-size:10px;margin-bottom:3px">${t.solRoofArea}</p><p style="color:#F59E0B;font-size:18px;font-weight:700">${jobSpec.roofM2.toFixed(1)} m²</p></div>
+        <div class="roi-item"><p style="color:#E8E0D5;font-size:10px;margin-bottom:3px">${t.solRoofArea}</p><p style="color:#F59E0B;font-size:18px;font-weight:700">${(jobSpec.roofM2||0).toFixed(1)} m²</p></div>
         <div class="roi-item"><p style="color:#E8E0D5;font-size:10px;margin-bottom:3px">${t.solPanelCap}</p><p style="color:#F59E0B;font-size:18px;font-weight:700">${kWp} kWp</p></div>
         <div class="roi-item"><p style="color:#E8E0D5;font-size:10px;margin-bottom:3px">${t.solMonthProd}</p><p style="color:#fff;font-size:15px;font-weight:700">${fN(monthKwh)} ${t.kwhM}</p></div>
         <div class="roi-item"><p style="color:#E8E0D5;font-size:10px;margin-bottom:3px">${t.solYearProd}</p><p style="color:#fff;font-size:15px;font-weight:700">${fN(yearKwh)} ${t.kwhY}</p></div>
@@ -1066,11 +1174,11 @@ function rSolContract(){
   <div style="padding:14px 16px">
     <div style="background:#fff;border:1px solid #E8E0D5;border-radius:14px;padding:18px;margin-bottom:14px">
       <div style="text-align:center;border-bottom:1px solid #E8E0D5;padding-bottom:14px;margin-bottom:14px">
-        <p style="font-size:11px;color:#888;margin-bottom:4px">☀️ RoofTech Solar</p>
+        <p style="font-size:11px;color:#888;margin-bottom:4px">☀️ ObraTech Solar</p>
         <p style="font-size:17px;font-weight:700;color:#1A1A2E;margin-bottom:2px">${L==='es'?'Contrato de instalación solar':'Solar installation contract'}</p>
         <p style="font-size:12px;color:#888">${new Date().toLocaleDateString(L==='es'?'es-MX':'en-US',{year:'numeric',month:'long',day:'numeric'})}</p>
       </div>
-      ${[[t.solContractor,w.name],[t.solClient,jobSpec.obra||'Cliente RoofTech'],[t.solAddress,jobSpec.address||'Iztapalapa, CDMX'],[t.solTimeline,`${w.days} ${t.days}`],[t.solWarranty,w.warranty]].map(([k,v])=>`<div class="spec-row"><span style="font-size:12px;color:#888">${k}</span><span style="font-size:13px;font-weight:600;color:#1A1A2E;text-align:right;max-width:55%">${v}</span></div>`).join('')}
+      ${[[t.solContractor,w.name],[t.solClient,jobSpec.obra||'Cliente ObraTech'],[t.solAddress,jobSpec.address||'Iztapalapa, CDMX'],[t.solTimeline,`${w.days} ${t.days}`],[t.solWarranty,w.warranty]].map(([k,v])=>`<div class="spec-row"><span style="font-size:12px;color:#888">${k}</span><span style="font-size:13px;font-weight:600;color:#1A1A2E;text-align:right;max-width:55%">${v}</span></div>`).join('')}
       ${selItems.length>0?`<div class="spec-row" style="flex-direction:column;align-items:flex-start;gap:6px"><span style="font-size:12px;color:#888">${t.solProducts}</span><div style="display:flex;flex-wrap:wrap;gap:5px">${selItems.map(i=>`<span style="font-size:11px;color:#1A1A2E;background:#F5F5F0;border-radius:6px;padding:3px 8px">${i.name}</span>`).join('')}</div></div>`:''}
       <div style="border-top:2px solid #1A1A2E;margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-size:14px;font-weight:700;color:#1A1A2E">${t.solTotal}</span>
@@ -1098,6 +1206,249 @@ function toggleTag(n,p){const idx=qTags.findIndex(i=>i.n===n);if(idx>=0)qTags.sp
 function addCrew(){const name=document.getElementById('cm-n')?.value,trade=document.getElementById('cm-o')?.value;if(!name||!trade)return;crewList.push({name,trade:{es:trade,en:trade},tel:'—',daily:parseInt(document.getElementById('cm-d')?.value)||0,status:'disponible'});showCrewModal=false;render();}
 
 render();
+</script>
+<script>
+
+// ═══ MEDIDAS TOOL ════════════════════════════════════════════
+var _pd=null, _at='techo', _st2=null;
+
+function rMedidas(){
+  var es=L==='es';
+  var ph=es?'Ej: Insurgentes Sur 1234, CDMX':'E.g. Insurgentes 1234, CDMX';
+  var sb=es?'Buscar':'Search';
+  var eh=es?'Mide cualquier propiedad':'Measure any property';
+  var ep=es?'Ingresa una dirección y obtén medidas para cada oficio.':'Enter an address for measurements.';
+  var lbl=es?'DIRECCIÓN':'ADDRESS';
+  var html='<div style="height:100%;display:flex;flex-direction:column;background:#F5F5F0">';
+  html+='<div style="padding:14px 16px;background:#1A1A2E;border-bottom:1px solid rgba(255,255,255,.08)">';
+  html+='<div style="font-size:10px;font-weight:700;color:#94A3B8;margin-bottom:7px">'+lbl+'</div>';
+  html+='<div style="display:flex;gap:8px">';
+  html+='<input id="mA" type="text" placeholder="'+ph+'" style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none" oninput="clearTimeout(_st2);_st2=setTimeout(mSug,400)" onkeydown="if(event.keyCode===13)mSearch()">';
+  html+='<button onclick="mGPS()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:11px 12px;color:#fff;font-size:16px;cursor:pointer;flex-shrink:0" title="'+(es?'Usar mi ubicación':'Use my location')+'">📍</button>';
+  html+='<button onclick="mSearch()" style="background:#FF6B2B;border:none;border-radius:10px;padding:11px 16px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">'+sb+'</button>';
+  html+='</div>';
+  html+='<div id="mS" style="display:none;background:#1E2D3D;border:1px solid rgba(255,255,255,.08);border-radius:10px;margin-top:6px;overflow:hidden"></div>';
+  html+='</div>';
+  html+='<div id="mH" style="display:none;padding:12px 16px;background:rgba(255,107,43,.06);border-bottom:1px solid rgba(255,255,255,.06)">';
+  html+='<div id="mN" style="font-size:14px;font-weight:800;color:#1A1A2E"></div>';
+  html+='<div id="mA2" style="font-size:11px;color:#888;margin-top:2px"></div>';
+  html+='<div id="mC" style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap"></div>';
+  html+='</div>';
+  html+='<div id="mT" style="display:none;overflow-x:auto;white-space:nowrap;padding:9px 14px;background:#fff;border-bottom:1px solid #E8E0D5;scrollbar-width:none"></div>';
+  html+='<div id="mR" style="flex:1;overflow-y:auto;padding:14px;display:none"></div>';
+  html+='<div id="mE" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center">';
+  html+='<div style="font-size:44px;margin-bottom:14px">📐</div>';
+  html+='<h3 style="font-size:15px;font-weight:700;color:#1A1A2E;margin-bottom:7px">'+eh+'</h3>';
+  html+='<p style="font-size:13px;color:#888;line-height:1.6;max-width:250px">'+ep+'</p>';
+  html+='</div></div>';
+  return html;
+}
+
+function mGPS(){
+  var el=document.getElementById('mA');
+  var es=L==='es';
+  if(el) el.value=es?'Obteniendo ubicación...':'Getting location...';
+  if(!navigator.geolocation){
+    if(el) el.value='';
+    alert(es?'GPS no disponible en este dispositivo':'GPS not available on this device');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      var lat=pos.coords.latitude, lon=pos.coords.longitude;
+      fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lon,{headers:{'Accept-Language':es?'es':'en'}})
+        .then(function(r){return r.json();})
+        .then(function(data){
+          var name=data.display_name||lat+','+lon;
+          if(el) el.value=name;
+          mFetchB(lat,lon,name);
+        })
+        .catch(function(){
+          if(el) el.value='';
+          mUse(120,44,2,lat+', '+lon);
+        });
+    },
+    function(err){
+      if(el) el.value='';
+      alert(es?'No se pudo obtener la ubicación. Verifica los permisos.':'Could not get location. Check permissions.');
+    },
+    {timeout:10000, enableHighAccuracy:true}
+  );
+}
+
+function mSearch(){
+  var el=document.getElementById('mA');
+  if(!el)return;
+  var q=el.value.trim();
+  if(!q)return;
+  var sug=document.getElementById('mS');
+  if(sug)sug.style.display='none';
+  var mh=document.getElementById('mH');
+  if(mh)mh.style.display='block';
+  var mn=document.getElementById('mN');
+  if(mn)mn.textContent=L==='es'?'Buscando...':'Searching...';
+  var ma2=document.getElementById('mA2');
+  if(ma2)ma2.textContent=q;
+  var me=document.getElementById('mE');
+  if(me)me.style.display='none';
+  var done=false;
+  var timer=setTimeout(function(){if(!done){done=true;mFall(q);}},4000);
+  fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=mx&q='+encodeURIComponent(q),{headers:{'Accept-Language':L==='es'?'es':'en'}})
+    .then(function(r){return r.json();})
+    .then(function(data){if(done)return;done=true;clearTimeout(timer);if(!data||!data.length){mFall(q);return;}mFetchB(data[0].lat,data[0].lon,data[0].display_name);})
+    .catch(function(){if(!done){done=true;clearTimeout(timer);mFall(q);}});
+}
+
+function mSug(){
+  var el=document.getElementById('mA');
+  if(!el||el.value.length<4)return;
+  var q=el.value;
+  fetch('https://nominatim.openstreetmap.org/search?format=json&limit=4&countrycodes=mx&q='+encodeURIComponent(q),{headers:{'Accept-Language':L==='es'?'es':'en'}})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var box=document.getElementById('mS');
+      if(!box||!data.length){if(box)box.style.display='none';return;}
+      box.style.display='block';
+      box.innerHTML=data.map(function(d){
+        var p=d.display_name.split(',');
+        return '<div style="padding:9px 14px;font-size:12px;color:#E8E0D5;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06)" onclick="mSelSug(this)" data-lat="'+d.lat+'" data-lon="'+d.lon+'" data-name="'+d.display_name.replace(/"/g,'&quot;')+'">'
+          +'<div style="font-weight:700">'+p[0]+'</div>'
+          +'<div style="color:#94A3B8;font-size:10px">'+p.slice(1,3).join(',')+'</div>'
+          +'</div>';
+      }).join('');
+    }).catch(function(){});
+}
+
+function mSelSug(el){
+  var lat=el.getAttribute('data-lat');
+  var lon=el.getAttribute('data-lon');
+  var name=el.getAttribute('data-name');
+  var inp=document.getElementById('mA');
+  if(inp)inp.value=name;
+  var sug=document.getElementById('mS');
+  if(sug)sug.style.display='none';
+  mFetchB(lat,lon,name);
+}
+
+function mFetchB(lat,lon,name){
+  var done=false;
+  var timer=setTimeout(function(){if(!done){done=true;mUse(120,44,2,name);}},5000);
+  fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent('[out:json][timeout:10];(way["building"](around:50,'+lat+','+lon+'););out geom;')})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(done)return;done=true;clearTimeout(timer);
+      if(!data.elements||!data.elements.length){mUse(120,44,2,name);return;}
+      var pts=data.elements[0].geometry||[];
+      var area=0,perim=0;
+      var coords=pts.map(function(p){return{x:p.lon*111320*Math.cos(p.lat*Math.PI/180),y:p.lat*111320};});
+      for(var i=0;i<coords.length-1;i++)area+=coords[i].x*coords[i+1].y-coords[i+1].x*coords[i].y;
+      area=Math.abs(area/2);
+      for(var i=0;i<pts.length-1;i++){var dx=(pts[i+1].lat-pts[i].lat)*111320,dy=(pts[i+1].lon-pts[i].lon)*111320*Math.cos(pts[i].lat*Math.PI/180);perim+=Math.sqrt(dx*dx+dy*dy);}
+      var tags=data.elements[0].tags||{};
+      mUse(Math.round(area),Math.round(perim),parseInt(tags['building:levels']||2),name);
+    })
+    .catch(function(){if(!done){done=true;clearTimeout(timer);mUse(120,44,2,name);}});
+}
+
+function mFall(q){
+  var seed=0;for(var i=0;i<q.length;i++)seed+=q.charCodeAt(i);
+  var rnd=function(a,b){seed=(seed*9301+49297)%233280;return a+(seed/233280)*(b-a);};
+  mUse(Math.round(rnd(80,160)),Math.round(rnd(36,56)),Math.max(1,Math.round(rnd(1,2))),q);
+}
+
+function mUse(a,p,fl,name){
+  _pd={area:a,perimeter:p,floors:fl,name:name};
+  var parts=name.split(',');
+  var mh=document.getElementById('mH');if(mh)mh.style.display='block';
+  var mn=document.getElementById('mN');if(mn)mn.textContent=parts[0];
+  var ma2=document.getElementById('mA2');if(ma2)ma2.textContent=parts.slice(1,3).join(',').trim();
+  var mc=document.getElementById('mC');
+  if(mc)mc.innerHTML=
+    '<span style="background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:700;color:#FF6B2B">🏠 '+a+' m²</span>'
+    +'<span style="background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:700;color:#FF6B2B">📏 '+p+' ml</span>'
+    +'<span style="background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2);border-radius:7px;padding:4px 10px;font-size:11px;font-weight:700;color:#FF6B2B">🏢 '+fl+' nivel'+(fl>1?'es':'')+'</span>';
+  var me=document.getElementById('mE');if(me)me.style.display='none';
+  var mt=document.getElementById('mT');if(mt)mt.style.display='block';
+  var mr=document.getElementById('mR');if(mr)mr.style.display='block';
+  mTabs();mRes();
+}
+
+function mTabs(){
+  var es=L==='es';
+  var trades=[
+    {id:'techo',icon:'🏠',col:'#FF6B2B',lb:es?'Techo':'Roofing'},
+    {id:'pintura',icon:'🎨',col:'#EC4899',lb:es?'Pintura':'Paint'},
+    {id:'albanil',icon:'🧱',col:'#F59E0B',lb:es?'Albañil':'Masonry'},
+    {id:'plomeria',icon:'🔧',col:'#3B82F6',lb:es?'Plomería':'Plumbing'},
+    {id:'electrico',icon:'⚡',col:'#EAB308',lb:es?'Eléctrico':'Electrical'},
+    {id:'solar',icon:'☀️',col:'#F59E0B',lb:'Solar'},
+    {id:'ev',icon:'🔌',col:'#22C55E',lb:es?'Cargador EV':'EV Charger'},
+  ];
+  var mt=document.getElementById('mT');
+  if(!mt)return;
+  mt.innerHTML=trades.map(function(tr){
+    var act=_at===tr.id;
+    return '<button onclick="_at=\''+tr.id+'\';mTabs();mRes()" style="display:inline-flex;align-items:center;gap:5px;padding:7px 11px;margin-right:5px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid '+(act?tr.col:'#E8E0D5')+';background:'+(act?tr.col+'22':'#fff')+';color:'+(act?tr.col:'#888')+'">'+tr.icon+' '+tr.lb+'</button>';
+  }).join('');
+}
+
+function mRes(){
+  if(!_pd)return;
+  var d=_pd;var a=d.area,p=d.perimeter,fl=d.floors,h=fl*3;
+  var es=L==='es';
+  var M={
+    techo:[[es?'Área total':'Total area',a+' m²'],[es?'Perímetro':'Perimeter',p+' ml'],[es?'Con inclinación':'Sloped',Math.round(a*1.15)+' m²'],[es?'Impermeabilizante':'Waterproofing',Math.round(a*0.5)+' L']],
+    pintura:[[es?'Muros ext.':'Ext. walls',Math.round(p*h)+' m²'],[es?'Muros int.':'Int. walls',Math.round(p*h*fl*0.85)+' m²'],[es?'Plafones':'Ceilings',Math.round(a*fl)+' m²'],[es?'Pintura total':'Total paint',Math.round((p*h*2+a*fl*2)/5)+' L']],
+    albanil:[[es?'Huella':'Footprint',a+' m²'],[es?'Cimentación':'Foundation',p+' ml'],[es?'Concreto':'Concrete',Math.round(a*0.1)+' m³'],[es?'Tabique':'Block',Math.round(p*h*10)+' pzas']],
+    plomeria:[[es?'Área total':'Total area',a+' m²'],[es?'Tubería':'Pipe',Math.round(p*fl*1.5)+' ml'],[es?'Bajantes':'Downspouts',Math.max(1,Math.round(a/50))+''],[es?'Cisterna':'Cistern',Math.round(a*4)+' L']],
+    electrico:[[es?'Área total':'Total area',a+' m²'],[es?'Circuitos':'Circuits',Math.max(2,Math.round(a*fl/40))+''],[es?'Contactos':'Outlets',Math.max(4,Math.round(a*fl/15))+''],[es?'Cableado':'Wiring',Math.round(p*fl*3)+' ml']],
+    solar:[[es?'Área techo':'Roof area',a+' m²'],[es?'Área útil':'Usable',Math.round(a*0.7)+' m²'],[es?'Paneles':'Panels',Math.floor(a*0.7/2)+' × 400W'],[es?'Sistema':'System',Math.round(Math.floor(a*0.7/2)*0.4)+' kWp'],[es?'Ahorro/mes':'Savings/mo','$'+Math.round(Math.floor(a*0.7/2)*48)+' MXN'],[es?'ROI':'ROI',Math.round(70000/(Math.floor(a*0.7/2)*48*12))+' años']],
+    ev:[[es?'Área total':'Total area',a+' m²'],[es?'Garage est.':'Est. garage',Math.round(a*0.2)+' m²'],['Cargador','Nivel 2 · 7.4kW'],[es?'Cableado':'Wiring',Math.round(Math.sqrt(a)*1.5)+' ml']],
+  };
+  var rows=M[_at]||[];
+  var html='';
+  if(_at==='pintura'){
+    html+='<div style="background:linear-gradient(135deg,rgba(236,72,153,.08),rgba(255,107,43,.04));border:1px solid rgba(236,72,153,.2);border-radius:12px;padding:13px;margin-bottom:12px">';
+    html+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#EC4899,#FF6B2B);display:flex;align-items:center;justify-content:center">🎨</div>';
+    html+='<div><div style="font-size:13px;font-weight:800;color:#1A1A2E">'+(es?'Visualizador 3D de colores':'3D Color Visualizer')+'</div>';
+    html+='<div style="font-size:10px;color:#888">'+(es?'Muestra al cliente cómo quedará el cuarto':'Show the client how the room looks')+'</div></div></div>';
+    html+='<button onclick="alert(\''+(es?'El visualizador 3D estará disponible en obratech.app':'The 3D visualizer will be available at obratech.app')+'\')" style="width:100%;background:linear-gradient(135deg,#EC4899,#FF6B2B);border:none;border-radius:9px;padding:10px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit">🎨 '+(es?'Abrir consultor de pintura':'Open paint consultant')+'</button></div>';
+  }
+  if(_at==='solar'){
+    html+='<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:12px;padding:12px;margin-bottom:12px">';
+    html+='<button onclick="postSolarFromMedidas()" style="width:100%;background:linear-gradient(135deg,#F59E0B,#FF6B2B);border:none;border-radius:9px;padding:10px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit">☀️ '+(es?'Publicar trabajo solar con estas medidas':'Post solar job with these measurements')+'</button></div>';
+  }
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+  rows.forEach(function(row,i){
+    var w=(i===rows.length-1&&rows.length%2!==0)?';grid-column:1/-1':'';
+    html+='<div style="background:#fff;border:1px solid #E8E0D5;border-radius:11px;padding:12px'+w+'"><div style="font-size:19px;font-weight:800;color:#FF6B2B;margin-bottom:3px">'+row[1]+'</div><div style="font-size:11px;color:#888;line-height:1.4">'+row[0]+'</div></div>';
+  });
+  html+='</div>';
+  var mr=document.getElementById('mR');
+  if(mr)mr.innerHTML=html;
+}
+
+function postSolarFromMedidas(){
+  if(!_pd)return;
+  // Auto-fill jobSpec from measured property data
+  jobSpec.address = _pd.name || '';
+  jobSpec.obra = _pd.name ? _pd.name.split(',')[0] : '';
+  jobSpec.roofM2 = Math.round(_pd.area * 0.7); // 70% of floor area = usable roof
+  jobSpec.kWp = Math.min(10, Math.floor(jobSpec.roofM2 * 0.18 * 10) / 10);
+  jobSpec.cfeBill = 0;
+  // Pre-populate roof zones with one zone based on measured area
+  roofZones = [{
+    color: '#F59E0B',
+    points: [{x:80,y:60},{x:310,y:60},{x:310,y:240},{x:80,y:240}],
+    area: jobSpec.roofM2,
+    perim: Math.round(_pd.perimeter || 44)
+  }];
+  roofPts = [];
+  TAB = 'solar';
+  solView = 'spec';
+  render();
+}
+
 </script>
 </body>
 </html>
